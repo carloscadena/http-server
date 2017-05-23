@@ -8,7 +8,7 @@ def client(message):
     client = socket.socket(socket.AF_INET,
                            socket.SOCK_STREAM,
                            socket.IPPROTO_TCP)
-    client.connect(('127.0.0.1', 8989))
+    client.connect(('127.0.0.1', 5000))
     client.sendall(message.encode('utf8'))
     buffer_length = 8
     message_complete = False
@@ -23,8 +23,4 @@ def client(message):
 
 
 if __name__ == "__main__":
-    try:
-        client()
-    except KeyboardInterrupt:
-        print('Interupted')
-        sys.exit(0)
+    client(sys.argv[1])
