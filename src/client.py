@@ -5,10 +5,10 @@ import sys
 
 def client(message):
     """."""
-    addr_info = socket.getaddrinfo('127.0.0.1', 8989)
-    stream_info = [attr for attr in addr_info if attr[1] == socket.SOCK_STREAM][0]
-    client = socket.socket(*stream_info[:3])
-    client.connect(stream_info[-1])
+    client = socket.socket(socket.AF_INET,
+                           socket.SOCK_STREAM,
+                           socket.IPPROTO_TCP)
+    client.connect(('127.0.0.1', 8989))
     client.sendall(message.encode('utf8'))
     buffer_length = 8
     message_complete = False
@@ -18,9 +18,8 @@ def client(message):
         returned += part.decode('utf8')
         if len(part) < buffer_length:
             print(returned)
-            conn.close()
-            client.close()
             message_complete = True
+    client.close()
 
 
 if __name__ == "__main__":
