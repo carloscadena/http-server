@@ -1,11 +1,11 @@
-"""."""
-import socket
-import sys
+"""Server for http-server echo assignment."""
+import socket  # pragma: no cover
+import sys  # pragma: no cover
 
 
 def server():  # pragma: no cover
     """
-    Opens the server, waits for input from client.
+    Open the server, waits for input from client.
 
     Closes connection on completed message.
     Closes server with Ctrl-C

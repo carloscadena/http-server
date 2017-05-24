@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""asdfa"""
+"""Test for the client server pair for echo."""
 from __future__ import unicode_literals
 import pytest
 
@@ -16,5 +16,6 @@ SERVER_PARAMS_TABLE = [
 
 @pytest.mark.parametrize('message, result', SERVER_PARAMS_TABLE)
 def test_client_server_echo(message, result):
+    """Test message send and recieve."""
     from client import client
     assert client(message) == result

@@ -1,11 +1,11 @@
-"""."""
+"""Client for http-server echo assignment."""
 import socket
 import sys
 
 
 def client(message):
     """
-    Establishes connection with the server.
+    Establishe connection with the server.
 
     Sends message and receives reply.
     Then closes Client.
@@ -28,6 +28,7 @@ def client(message):
     print(returned)
     client.close()
     return returned
+
 
 if __name__ == "__main__":  # pragma: no cover
     client(sys.argv[1])

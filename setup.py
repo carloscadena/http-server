@@ -1,8 +1,9 @@
+"""Setup for echo server."""
 from setuptools import setup
 
-dependencies = ['pytest', 'pytest-cov']
+dependencies = []
 extra_packages = {
-    'testing': ['tox']
+    'testing': ['ipython', 'pytest', 'pytest-cov', 'tox']
 }
 
 setup(
@@ -10,7 +11,7 @@ setup(
     description='client communicates with the server',
     version='0.1',
     author='Carlos Cadena, Chris Hudson',
-    author_email='cs.cadena@gmail.com',
+    author_email='cs.cadena@gmail.com, c.ahudson84@yahoo.com',
     license='MIT',
     py_modules='client, server',
     package_dir={'': 'src'},
