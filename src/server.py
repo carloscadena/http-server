@@ -1,11 +1,15 @@
-"""."""
-import socket
-import sys
+"""Server for http-server echo assignment."""
+import socket  # pragma: no cover
+import sys  # pragma: no cover
+import email.utils
+
+
+date = email.utils.formatdate(usegmt=True)
 
 
 def server():  # pragma: no cover
     """
-    Opens the server, waits for input from client.
+    Open the server, waits for input from client.
 
     Closes connection on completed message.
     Closes server with Ctrl-C
@@ -19,7 +23,6 @@ def server():  # pragma: no cover
     while True:
         try:
             connection, address = server.accept()
-
             message = b''
             buffer_length = 8
             message_complete = False
@@ -28,12 +31,22 @@ def server():  # pragma: no cover
                 message += part
                 if b'\n\r\n' in message:
                     message_complete = True
-            connection.sendall(message)
+            connection.sendall(response_ok())
             connection.close()
         except KeyboardInterrupt:
             print('\nServer closed good bye.')
             server.close()
             sys.exit(0)
+
+
+def response_ok():
+    """Send a response OK."""
+    return b'HTTP/1.1 200 OK\r\nMessage recieved.\n\r\n'
+
+
+def response_error():
+    """Send a response erorr."""
+    return b'HTTP/1.1 500 Internal Server Error\r\nError!'
 
 
 if __name__ == '__main__':  # pragma: no cover
