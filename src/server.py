@@ -1,10 +1,7 @@
 """Server for http-server echo assignment."""
 import socket  # pragma: no cover
 import sys  # pragma: no cover
-import email.utils
-
-
-date = email.utils.formatdate(usegmt=True)
+from email.utils import formatdate
 
 
 def server():  # pragma: no cover
@@ -29,19 +26,22 @@ def server():  # pragma: no cover
             while not message_complete:
                 part = connection.recv(buffer_length)
                 message += part
-                if b'\n\r\n' in message:
+                if b'\r\n\r\n' in message:
                     message_complete = True
             connection.sendall(response_ok())
             connection.close()
         except KeyboardInterrupt:
             print('\nServer closed good bye.')
+            server.shutdown(socket.SHUT_WR)
             server.close()
             sys.exit(0)
 
 
 def response_ok():
     """Send a response OK."""
-    return b'HTTP/1.1 200 OK\r\nMessage recieved.\n\r\n'
+    msg = b'HTTP/1.1 200 OK\r\nMessage recieved.\r\n'
+    msg += u'Date: {}\r\n\r\n'.format(formatdate(usegmt=True)).encode('utf8')
+    return msg
 
 
 def response_error():
@@ -52,3 +52,9 @@ def response_error():
 if __name__ == '__main__':  # pragma: no cover
     print('Server ready and waiting...\n')
     server()
+
+"""
+To Do:
+tests
+send date back
+"""
