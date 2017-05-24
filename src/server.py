@@ -28,6 +28,7 @@ def server():  # pragma: no cover
                 message += part
                 if b'\r\n\r\n' in message:
                     message_complete = True
+            print(message)
             connection.sendall(response_ok())
             connection.close()
         except KeyboardInterrupt:
