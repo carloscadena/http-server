@@ -13,7 +13,7 @@ SERVER_OK_PARAMS = [
 ]
 
 
-ERORR_PARAMS = [
+ERROR_PARAMS = [
     (b'HTTP/1.1 500 Internal Server Error\r\n\r\n')
 ]
 
@@ -32,7 +32,7 @@ def test_client_server_response_ok(message, result):
     assert message == result
 
 
-@pytest.mark.parametrize('result', ERORR_PARAMS)
+@pytest.mark.parametrize('result', ERROR_PARAMS)
 def test_response_error(result):
     """Test message send and recieve."""
     from server import response_error
