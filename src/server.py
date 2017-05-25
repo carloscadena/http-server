@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 """Server for http-server echo assignment."""
+from __future__ import unicode_literals
 import socket  # pragma: no cover
 import sys  # pragma: no cover
 
@@ -37,5 +39,5 @@ def server():  # pragma: no cover
 
 
 if __name__ == '__main__':  # pragma: no cover
-    print('Server ready and waiting...\n')
+    print('Server ready and waiting...')
     server()
