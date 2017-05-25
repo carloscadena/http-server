@@ -39,15 +39,15 @@ def server():  # pragma: no cover
 
 
 def response_ok():
-    """Send a response OK."""
-    msg = b'HTTP/1.1 200 OK\r\nMessage recieved.\r\n'
+    """Send a 200 OK response."""
+    msg = b'HTTP/1.1 200 OK\r\n'
     msg += u'Date: {}\r\n\r\n'.format(formatdate(usegmt=True)).encode('utf8')
     return msg
 
 
 def response_error():
-    """Send a response erorr."""
-    return b'HTTP/1.1 500 Internal Server Error\r\nError!'
+    """Send a 500 server error response."""
+    return b'HTTP/1.1 500 Internal Server Error'
 
 
 if __name__ == '__main__':  # pragma: no cover
