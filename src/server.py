@@ -28,7 +28,7 @@ def server():  # pragma: no cover
                 message += part
                 if message.endswith(b'\r\n\r\n'):
                     message_complete = True
-            print(message)
+            print(message.decode('utf8'))
             connection.sendall(response_ok())
             connection.close()
         except KeyboardInterrupt:
@@ -47,9 +47,9 @@ def response_ok():
 
 def response_error():
     """Send a 500 server error response."""
-    return b'HTTP/1.1 500 Internal Server Error'
+    return b'HTTP/1.1 500 Internal Server Error\r\n\r\n'
 
 
 if __name__ == '__main__':  # pragma: no cover
-    print('Server ready and waiting...\n')
+    print('Server ready and waiting...')
     server()

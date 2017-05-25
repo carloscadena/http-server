@@ -5,21 +5,21 @@ import pytest
 
 
 SERVER_OK_PARAMS = [
-    ('Hello', 'HTTP/1.1 200 OK\r\nMessage recieved.\r\n'),
+    ('Hello', 'HTTP/1.1 200 OK\r\n'),
     ('hello my name is chris and i am in python 401',
-     'HTTP/1.1 200 OK\r\nMessage recieved.\r\n'),
+     'HTTP/1.1 200 OK\r\n'),
     ('12345678',
-     'HTTP/1.1 200 OK\r\nMessage recieved.\r\n'),
+     'HTTP/1.1 200 OK\r\n'),
 ]
 
 
 ERORR_PARAMS = [
-    (b'HTTP/1.1 500 Internal Server Error\r\nError!')
+    (b'HTTP/1.1 500 Internal Server Error\r\n\r\n')
 ]
 
 
 OK_PARAMS = [
-    (b'HTTP/1.1 200 OK\r\nMessage recieved.\r\n')
+    (b'HTTP/1.1 200 OK\r\n')
 ]
 
 
