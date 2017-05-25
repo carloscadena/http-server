@@ -26,7 +26,7 @@ def server():  # pragma: no cover
             while not message_complete:
                 part = connection.recv(buffer_length)
                 message += part
-                if b'\r\n\r\n' in message:
+                if message.endswith(b'\r\n\r\n'):
                     message_complete = True
             print(message)
             connection.sendall(response_ok())
