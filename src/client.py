@@ -18,13 +18,12 @@ def client(message):
     client.sendall(message.encode('utf8'))
     buffer_length = 8
     message_complete = False
-    returned = b''
+    returned = ''
     while not message_complete:
         part = client.recv(buffer_length)
-        returned += part
-        if b'\r\n\r\n' in returned:
+        returned += part.decode('utf8')
+        if returned.endswith('\r\n\r\n'):
             message_complete = True
-    returned = returned.decode('utf8')
     print(returned)
     client.shutdown(socket.SHUT_WR)
     client.close()
