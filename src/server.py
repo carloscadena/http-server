@@ -53,9 +53,3 @@ def response_error():
 if __name__ == '__main__':  # pragma: no cover
     print('Server ready and waiting...\n')
     server()
-
-"""
-To Do:
-tests
-send date back
-"""
