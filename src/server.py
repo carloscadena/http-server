@@ -30,9 +30,12 @@ def server():  # pragma: no cover
                 message += part.decode('utf8')
                 if '\r\n\r\n' in message:
                     message_complete = True
-            parse_request(message)
-            connection.sendall(response_ok())
-            connection.close()
+            if parse_request(message) == '/index.html':
+                connection.sendall(response_ok())
+                connection.close()
+            else:
+                connection.sendall(parse_request(message))
+                connection.close()
         except KeyboardInterrupt:
             print('\nServer closed good bye.')
             server.shutdown(socket.SHUT_WR)
@@ -42,7 +45,7 @@ def server():  # pragma: no cover
 
 def response_ok():
     """Send a response OK."""
-    msg = b'HTTP/1.1 200 OK\r\nMessage recieved.\r\n'
+    msg = b'HTTP/1.1 200 OK\r\n'
     msg += u'Date: {}\r\n\r\n'.format(formatdate(usegmt=True)).encode('utf8')
     return msg
 
@@ -64,17 +67,23 @@ def parse_request(message):
     """."""
     request_parts = message.split()
     if len(request_parts) != 5:
-        raise Exception(response_error(400))
-    if request_parts[0] == 'GET':
-        if request_parts[2] == 'HTTP/1.1':
-            if request_parts[3] == 'Host:':
-                return request_parts[1].encode('utf8')
-            else:
-                raise Exception(response_error(400))
+        return Exception(response_error(400))
+    try:
+        if request_parts[0] == 'GET':
+        try:
+            if request_parts[2] == 'HTTP/1.1':
+            try:
+                if request_parts[3] == 'Host:':
+                    return request_parts[1].encode('utf8')
         else:
-            raise Exception(response_error(505))
-    else:
-        raise Exception(response_error(405))
+            raise
+    except Exception:
+        return response_error(400)
+    except:
+            else:
+                return Exception(response_error(505))
+        else:
+            return Exception(response_error(405))
 
 
 if __name__ == '__main__':  # pragma: no cover

@@ -41,7 +41,7 @@ def client(command):
 
 
 if __name__ == "__main__":  # pragma: no cover
-    command = open('command.txt').read().split(' ')
+    command = open('GETSOME_command.txt').read().split(' ')
 
     if command is not '':
         client(' '.join(command))
