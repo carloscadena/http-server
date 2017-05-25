@@ -14,7 +14,7 @@ SERVER_OK_PARAMS = [
 
 
 ERORR_PARAMS = [
-    (b'HTTP/1.1 500 Internal Server Error\r\nError!')
+    (u'HTTP/1.1 500 Internal Server Error\r\nError!')
 ]
 
 

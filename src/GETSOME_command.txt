@@ -1,0 +1,2 @@
+GETSOME /index.html HTTP/1.1
+Host: www.yourwebsite.com:80

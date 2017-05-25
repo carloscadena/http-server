@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 """Server for http-server echo assignment."""
+from __future__ import unicode_literals
 import socket  # pragma: no cover
 import sys  # pragma: no cover
 from email.utils import formatdate
@@ -14,20 +16,21 @@ def server():  # pragma: no cover
     server = socket.socket(socket.AF_INET,
                            socket.SOCK_STREAM,
                            socket.IPPROTO_TCP)
-    address = ('127.0.0.1', 5000)
+    address = ('127.0.0.1', 5001)
     server.bind(address)
     server.listen(1)
     while True:
         try:
             connection, address = server.accept()
-            message = b''
+            message = ''
             buffer_length = 8
             message_complete = False
             while not message_complete:
                 part = connection.recv(buffer_length)
-                message += part
-                if b'\r\n\r\n' in message:
+                message += part.decode('utf8')
+                if '\r\n\r\n' in message:
                     message_complete = True
+            parse_request(message)
             connection.sendall(response_ok())
             connection.close()
         except KeyboardInterrupt:
@@ -44,17 +47,36 @@ def response_ok():
     return msg
 
 
-def response_error():
+def response_error(error_code):
     """Send a response erorr."""
-    return b'HTTP/1.1 500 Internal Server Error\r\nError!'
+    if error_code == 400:
+        response = ('HTTP/1.1 ' + str(error_code) + ' Bad Request\r\n\r\n')
+    elif error_code == 405:
+        response = ('HTTP/1.1 ' + str(error_code) + ' Method \
+Not Allowed\r\n\r\n')
+    elif error_code == 505:
+        response = ('HTTP/1.1 ' + str(error_code) + ' HTTP Version \
+Not Supported\r\n\r\n')
+    return response
+
+
+def parse_request(message):
+    """."""
+    request_parts = message.split()
+    if len(request_parts) != 5:
+        raise Exception(response_error(400))
+    if request_parts[0] == 'GET':
+        if request_parts[2] == 'HTTP/1.1':
+            if request_parts[3] == 'Host:':
+                return request_parts[1].encode('utf8')
+            else:
+                raise Exception(response_error(400))
+        else:
+            raise Exception(response_error(505))
+    else:
+        raise Exception(response_error(405))
 
 
 if __name__ == '__main__':  # pragma: no cover
-    print('Server ready and waiting...\n')
+    print('Server ready and waiting...')
     server()
-
-"""
-To Do:
-tests
-send date back
-"""
