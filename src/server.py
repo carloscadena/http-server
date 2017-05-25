@@ -16,7 +16,7 @@ def server():  # pragma: no cover
     server = socket.socket(socket.AF_INET,
                            socket.SOCK_STREAM,
                            socket.IPPROTO_TCP)
-    address = ('127.0.0.1', 5001)
+    address = ('127.0.0.1', 5002)
     server.bind(address)
     server.listen(1)
     while True:
@@ -30,11 +30,12 @@ def server():  # pragma: no cover
                 message += part.decode('utf8')
                 if '\r\n\r\n' in message:
                     message_complete = True
-            if parse_request(message) == '/index.html':
+            try:
+                parse_request(message)
                 connection.sendall(response_ok())
                 connection.close()
-            else:
-                connection.sendall(parse_request(message))
+            except ValueError as error:
+                connection.sendall(response_error(error.args[0]))
                 connection.close()
         except KeyboardInterrupt:
             print('\nServer closed good bye.')
@@ -52,38 +53,24 @@ def response_ok():
 
 def response_error(error_code):
     """Send a response erorr."""
-    if error_code == 400:
-        response = ('HTTP/1.1 ' + str(error_code) + ' Bad Request\r\n\r\n')
-    elif error_code == 405:
-        response = ('HTTP/1.1 ' + str(error_code) + ' Method \
-Not Allowed\r\n\r\n')
-    elif error_code == 505:
-        response = ('HTTP/1.1 ' + str(error_code) + ' HTTP Version \
-Not Supported\r\n\r\n')
-    return response
+    return ('HTTP/1.1 ' + error_code + '\r\n\r\n').encode('utf8')
 
 
 def parse_request(message):
     """."""
     request_parts = message.split()
     if len(request_parts) != 5:
-        return Exception(response_error(400))
-    try:
-        if request_parts[0] == 'GET':
-        try:
-            if request_parts[2] == 'HTTP/1.1':
-            try:
-                if request_parts[3] == 'Host:':
-                    return request_parts[1].encode('utf8')
-        else:
-            raise
-    except Exception:
-        return response_error(400)
-    except:
+        raise ValueError('400 Bad Request')
+    if request_parts[0] == 'GET':
+        if request_parts[2] == 'HTTP/1.1':
+            if request_parts[3] == 'Host:':
+                return request_parts[1].encode('utf8')
             else:
-                return Exception(response_error(505))
+                raise ValueError('400 Bad Request')
         else:
-            return Exception(response_error(405))
+            raise ValueError('505 HTTP Version Not Supported')
+    else:
+        raise ValueError('405 Method Not Allowed')
 
 
 if __name__ == '__main__':  # pragma: no cover

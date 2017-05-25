@@ -16,7 +16,7 @@ def client(command):
         client = socket.socket(socket.AF_INET,
                                socket.SOCK_STREAM,
                                socket.IPPROTO_TCP)
-        client.connect(('127.0.0.1', 5001))
+        client.connect(('127.0.0.1', 5002))
         command += '\r\n\r\n'
         client.sendall(command.encode('utf8'))
         buffer_length = 8
@@ -41,7 +41,7 @@ def client(command):
 
 
 if __name__ == "__main__":  # pragma: no cover
-    command = open('GETSOME_command.txt').read().split(' ')
+    command = open('command.txt').read().split(' ')
 
     if command is not '':
         client(' '.join(command))
