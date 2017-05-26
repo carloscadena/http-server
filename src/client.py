@@ -33,7 +33,7 @@ def client(command):
         client.shutdown(socket.SHUT_WR)
         client.close()
         return returned
-    except KeyboardInterrupt:
+    except KeyboardInterrupt:  # pragma: no cover
         print('\nClient closed good bye.')
         client.shutdown(socket.SHUT_WR)
         client.close()

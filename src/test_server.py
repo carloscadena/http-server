@@ -19,25 +19,25 @@ TEST_PARSE_ERROR_CODE_400 = [
     ('GET /index.html HTTP/1.1 Hosts: www.yourwebsite.com:80'),
     ('GET smelly/stuff/index.html HTTP/1.1 Bosst: www.yourwebsite.com:80'),
     ('GET bleh/bleh.html HTTP/1.1 shmost: www.yourwebsite.com:80')
-    ]
+]
 
 TEST_PARSE_ERROR_CODE_505 = [
     ('GET /index.html HTTPP/1.1 Hosts: www.yourwebsite.com:80'),
     ('GET smelly/stuff/index.html HTTP Bosst: www.yourwebsite.com:80'),
     ('GET bleh/bleh.html http/1.1 shmost: www.yourwebsite.com:80')
-    ]
+]
 
 TEST_PARSE_ERROR_CODE_405 = [
     ('POST /index.html HTTPP/1.1 Hosts: www.yourwebsite.com:80'),
     ('get smelly/stuff/index.html HTTP Bosst: www.yourwebsite.com:80'),
     ('GEET bleh/bleh.html http/1.1 shmost: www.yourwebsite.com:80')
-    ]
+]
 
 TEST_PARSE_ERROR_LEN_PARAMS = [
     ('GET /index.html HTTP/1.1 Host:'),
     ('ASDFA SDFASDF ASDFASDF ASDFADFA GASGASG ADSFA'),
     ('GET /index.html HTTP/1.1 Host: www.google.com:80 :)')
-    ]
+]
 
 TEST_OK_PARAMS = [
     (b'HTTP/1.1 200 OK\r\n')
@@ -60,8 +60,36 @@ TEST_CLIENT_PARSE_OK_PARAMS = [
 ]
 
 
+TEST_CLIENT_PARSE_ERROR_LEN_PARAMS = [
+    ('GET /index.html HTTP/1.1 Host:www.google.com:80'),
+    ('GET /index.html HTTP/1.1 Host: www.face book.com:80'),
+    ('GET bleh/bleh.html HTTP/1.1 Host: www.outlook.com:80 pizza')
+]
+
+
+TEST_CLIENT_PARSE_ERROR_CODE_400 = [
+    ('GET /index.html HTTP/1.1 Hosteswiththemostest: www.google.com:80'),
+    ('GET /index.html HTTP/1.1 Host www.facebook.com:80'),
+    ('GET bleh/bleh.html HTTP/1.1 www.outlook.com:80 Host:')
+]
+
+
+TEST_CLIENT_PARSE_ERROR_CODE_405 = [
+    ('GETT /index.html HTTP/1.1 Host: www.google.com:80'),
+    ('PUT /index.html HTTP/1.1 Host: www.facebook.com:80'),
+    ('Wookie bleh/bleh.html HTTP/1.1 Host: www.outlook.com:80')
+]
+
+
+TEST_CLIENT_PARSE_ERROR_CODE_505 = [
+    ('GET /index.html HTP/11 Host: www.google.com:80'),
+    ('GET /index.html HTTPS/1.1 Host: www.facebook.com:80'),
+    ('GET bleh/bleh.html HTTP/2.1 Host: www.outlook.com:80')
+]
+
+
 @pytest.mark.parametrize('message, result', SERVER_PARSE_OK_PARAMS)
-def test_server_parse_request_OK(message, result):
+def test_server_parse_request_ok(message, result):
     """Test parse request function receives properly formatted request."""
     assert parse_request(message) == result
 
@@ -96,7 +124,7 @@ def test_parse_req_bad_get(message):
 
 @pytest.mark.parametrize('code, result', TEST_RESPONSE_ERROR_PARAMS)
 def test_response_error(code, result):
-    """Test return of error message from response error function.s"""
+    """Test return of error message from response error function."""
     from server import response_error
     assert response_error(code) == result
 
@@ -111,34 +139,30 @@ def test_response_ok(result):
 
 
 @pytest.mark.parametrize('message, result', TEST_CLIENT_PARSE_OK_PARAMS)
-def test_server_parse_request_OK(message, result):
+def test_client_parse_request_ok(message, result):
     """Test parse request function receives properly formatted request."""
     assert client(message) == result
 
 
-# @pytest.mark.parametrize('message', TEST_PARSE_ERROR_LEN_PARAMS)
-# def test_parse_req_bad_len(message):
-#     """Test the length function in the parse request function."""
-#     with pytest.raises(ValueError):
-#         parse_request(message)
-#
-#
-# @pytest.mark.parametrize('message', TEST_PARSE_ERROR_CODE_400)
-# def test_parse_req_bad_host(message):
-#     """If host is bad, parse request function returns error code 400."""
-#     with pytest.raises(ValueError):
-#         parse_request(message)
-#
-#
-# @pytest.mark.parametrize('message', TEST_PARSE_ERROR_CODE_505)
-# def test_parse_req_bad_http(message):
-#     """If http is bad, parse request function returns error code 505."""
-#     with pytest.raises(ValueError):
-#         parse_request(message)
-#
-#
-# @pytest.mark.parametrize('message', TEST_PARSE_ERROR_CODE_405)
-# def test_parse_req_bad_get(message):
-#     """If GET is bad, parse request function returns error code 405."""
-#     with pytest.raises(ValueError):
-#         parse_request(message)
+@pytest.mark.parametrize('message', TEST_CLIENT_PARSE_ERROR_LEN_PARAMS)
+def test_client_parse_req_bad_len(message):
+    """Test the length function in the parse request function."""
+    assert client(message) == 'HTTP/1.1 400 Bad Request'
+
+
+@pytest.mark.parametrize('message', TEST_CLIENT_PARSE_ERROR_CODE_400)
+def test_client_parse_req_bad_host(message):
+    """If host is bad, parse request function returns error code 400."""
+    assert client(message) == 'HTTP/1.1 400 Bad Request'
+
+
+@pytest.mark.parametrize('message', TEST_CLIENT_PARSE_ERROR_CODE_405)
+def test_client_parse_req_bad_http(message):
+    """If http is bad, parse request function returns error code 505."""
+    assert client(message) == 'HTTP/1.1 405 Method Not Allowed'
+
+
+@pytest.mark.parametrize('message', TEST_CLIENT_PARSE_ERROR_CODE_505)
+def test_client_parse_req_bad_get(message):
+    """If GET is bad, parse request function returns error code 405."""
+    assert client(message) == 'HTTP/1.1 505 HTTP Version Not Supported'
