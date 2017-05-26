@@ -1,2 +1,0 @@
-GET /index.html HTTP/2.1
-Host: www.yourwebsite.com:80

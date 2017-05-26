@@ -10,7 +10,7 @@ def server():  # pragma: no cover
     """
     Open the server, waits for input from client.
 
-    Closes connection on completed message.
+    Closes connection on completed reply.
     Closes server with Ctrl-C
     """
     server = socket.socket(socket.AF_INET,
@@ -57,7 +57,11 @@ def response_error(error_code):
 
 
 def parse_request(message):
-    """."""
+    """
+    Accept request from client.
+
+    Verify content and return appropriate error or URI.
+    """
     request_parts = message.split()
     if len(request_parts) != 5:
         raise ValueError('400 Bad Request')
