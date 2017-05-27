@@ -10,7 +10,7 @@ def server():  # pragma: no cover
     """
     Open the server, waits for input from client.
 
-    Closes connection on completed reply.
+    Closes connection on completed reply or error.
     Closes server with Ctrl-C
     """
     server = socket.socket(socket.AF_INET,
@@ -45,14 +45,14 @@ def server():  # pragma: no cover
 
 
 def response_ok():
-    """Send a response OK."""
+    """Return a response OK."""
     msg = b'HTTP/1.1 200 OK\r\n'
     msg += u'Date: {}\r\n\r\n'.format(formatdate(usegmt=True)).encode('utf8')
     return msg
 
 
 def response_error(error_code):
-    """Send a response erorr."""
+    """Return a response erorr."""
     return ('HTTP/1.1 ' + error_code + '\r\n\r\n').encode('utf8')
 
 
