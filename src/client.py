@@ -11,6 +11,7 @@ def client(command):
 
     Sends message and receives reply.
     Then closes Client.
+    Optional close with ctrl-c if client/server hang.
     """
     try:
         client = socket.socket(socket.AF_INET,
