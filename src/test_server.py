@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Test for the client server pair for echo."""
+"""Test for the client server pair for step1."""
 from __future__ import unicode_literals
 import pytest
 
@@ -25,7 +25,7 @@ OK_PARAMS = [
 
 @pytest.mark.parametrize('message, result', SERVER_OK_PARAMS)
 def test_client_server_response_ok(message, result):
-    """Test message send and recieve."""
+    """Test server recieve and return ok to client."""
     from client import client
     message = client(message)
     message = message[0:-39]
@@ -34,14 +34,14 @@ def test_client_server_response_ok(message, result):
 
 @pytest.mark.parametrize('result', ERROR_PARAMS)
 def test_response_error(result):
-    """Test message send and recieve."""
+    """Test return of error message from error function."""
     from server import response_error
     assert response_error() == result
 
 
 @pytest.mark.parametrize('result', OK_PARAMS)
 def test_response_ok(result):
-    """Test message send and recieve."""
+    """Test ok message from ok function."""
     from server import response_ok
     msg = response_ok()
     msg = msg[0:-39]
