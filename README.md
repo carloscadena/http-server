@@ -7,4 +7,4 @@ client.py and server.py
 ### test:
 test_server.py
 
-Client sends an HTTP request which is accumulated, and tested. Server returns an HTTP 200 OK response or appropriate error based on testing.
+Client or browser sends an HTTP request which is accumulated, and tested. Server returns an response with OK headers and content or an appropriate error.
