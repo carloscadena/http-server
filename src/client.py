@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Client for http-server echo assignment."""
+"""Client for http-server step2 assignment."""
 from __future__ import unicode_literals
 import socket
 import sys
