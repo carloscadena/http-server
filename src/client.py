@@ -41,6 +41,7 @@ def client(command):
         sys.exit(0)
 
 
+
 if __name__ == "__main__":  # pragma: no cover
     command = open('command.txt').read().split(' ')
 
