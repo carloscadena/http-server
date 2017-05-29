@@ -1,10 +1,13 @@
-# -*- coding: utf-8 -*-
+
 """Server for http-server echo assignment."""
-from __future__ import unicode_literals
+# from __future__ import unicode_literals
 import socket  # pragma: no cover
 import sys  # pragma: no cover
 from email.utils import formatdate
 from os import walk, path
+
+
+date = formatdate(usegmt=True)
 
 
 def server():  # pragma: no cover
@@ -17,7 +20,7 @@ def server():  # pragma: no cover
     server = socket.socket(socket.AF_INET,
                            socket.SOCK_STREAM,
                            socket.IPPROTO_TCP)
-    address = ('127.0.0.1', 5006)
+    address = ('127.0.0.1', 5000)
     server.bind(address)
     server.listen(1)
     while True:
@@ -32,17 +35,22 @@ def server():  # pragma: no cover
                 if message.endswith('\r\n\r\n'):
                     message_complete = True
             try:
+                print(message)
                 uri = parse_request(message)
                 content = resolve_uri(uri)
                 response = response_ok(content)
                 print(response)
-                connection.sendall(response.encode('utf8'))
+                connection.sendall(response)
                 connection.close()
             except ValueError as error:
-                connection.sendall(response_error(error.args[0]))
+                response = response_error(error.args[0])
+                print(response)
+                connection.sendall(response)
                 connection.close()
             except IOError as error:
-                connection.sendall(response_error(error.args[0]))
+                response = response_error(error.args[0])
+                print(response)
+                connection.sendall(response)
                 connection.close()
         except KeyboardInterrupt:
             print('\nServer closed good bye.')
@@ -54,18 +62,24 @@ def server():  # pragma: no cover
 def response_ok(body):
     """Send a response OK, headers, and content."""
     content, content_size, content_type = body
-    content_size += 9
-    msg = 'HTTP/1.1 200 OK\r\n'
-    msg += 'Date: {}\r\n'.format(formatdate(usegmt=True))
-    msg += 'Content-Type: {}\r\n'.format(content_type)
-    msg += 'Content-Length: {}\r\n\r\n'.format(content_size)
-    msg += '{}'.format(content)
+    # content_size += 25
+    msg = b'HTTP/1.1 200 OK\r\nDate: '
+    msg += date.encode('utf8')
+    msg += b'\r\nContent-Type: '
+    msg += content_type.encode('utf8')
+    msg += b'\r\nContent-Length: '
+    msg += str(content_size).encode('utf8')
+    msg += b'\r\n\r\n'
+    msg += content
+    msg += b'\r\n\r\n'
     return msg
 
 
 def response_error(error_code):
     """Send a response erorr."""
-    return ('HTTP/1.1 ' + error_code + '\r\n\r\n').encode('utf8')
+    err = ('HTTP/1.1 ' + error_code + '\r\n\r\n').encode('utf8')
+    err += b'Sorry we could not fulfill your request.'
+    return err
 
 
 def parse_request(message):
@@ -97,6 +111,7 @@ def resolve_uri(uri):
     content = ''
     content_size = 0
     content_type = ''
+    print(file_path)
     file_type_dict = {
         'txt': 'text/plain; charset=utf-8',
         'jpg': 'image/jpeg',
@@ -109,27 +124,24 @@ def resolve_uri(uri):
     for f_type in file_type_dict:
         if f_type == file_type:
             content_type = f_type
+    file_dir = []
+    for dpath, dname, fname in walk(file_path):
+        for file in fname:
+            file_dir.append(path.join(dpath, file).replace(file_path, ''))
     if path.isdir(file_path):
-        content_type = 'directory'
-        file_dir = []
-        for dirp, dirn, filen in walk(file_path):
-            for file in filen:
-                file_dir.append(path.join(dirp, file).replace(file_path, ''))
         html_open = '<!DOCTYPE html><html><body><h1>File Directory:</h1><ul>'
         for file in file_dir:
             html_open += '<li>{}</li>'.format(file)
         html_close = '</ul></body></html>'
         content = (html_open + html_close).encode('utf8')
         content_size = len(content)
-        print(len(content))
         return content, content_size, content_type
-    try:
+    elif path.isfile(file_path):
         content_size = path.getsize(file_path)
         content = open(file_path, 'rb').read()
-        print(len(content))
-    except:
+        return content, content_size, content_type
+    else:
         raise IOError('404 File Not Found')
-    return content, content_size, content_type
 
 
 if __name__ == '__main__':  # pragma: no cover
