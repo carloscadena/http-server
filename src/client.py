@@ -25,7 +25,7 @@ def client(command):
         while not message_complete:
             part = client.recv(buffer_length)
             returned += part
-            if b'\r\n\r\n' in returned:
+            if returned.endswith(b'\r\n\r\n'):
                 message_complete = True
         returned = returned.decode('utf8')
         returned = returned[0:-4]
