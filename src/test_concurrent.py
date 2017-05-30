@@ -1,18 +1,18 @@
 """Test for the client server pair for echo."""
-from server import parse_request, resolve_uri, response_ok, response_error
-from server_client import client
+from concurrent import parse_request, resolve_uri, response_ok, response_error
+from concurrent_client import client
 from os import path
 import pytest
 
 
-html_path = path.realpath(__file__).replace('test_server.py',
+html_path = path.realpath(__file__).replace('test_concurrent.py',
                                             'webroot/a_web_page.html')
-jpeg_path = path.realpath(__file__).replace('test_server.py',
+jpeg_path = path.realpath(__file__).replace('test_concurrent.py',
                                             'webroot/images/JPEG_example.jpg')
 
-png_path = path.realpath(__file__).replace('test_server.py',
+png_path = path.realpath(__file__).replace('test_concurrent.py',
                                            'webroot/images/sample_1.png')
-balls_path = path.realpath(__file__).replace('test_server.py',
+balls_path = path.realpath(__file__).replace('test_concurrent.py',
                                              'webroot/images/Sample_Scene_Balls.jpg')
 
 with open(html_path, 'rb') as html_open:
@@ -326,3 +326,9 @@ def test_resolve_uri_error(uri):
     """."""
     with pytest.raises(IOError):
         resolve_uri(uri)
+
+
+# def test_close_down_files():
+#     """."""
+#     jpeg_file.close(jpeg_path, 'rb')
+#     png_file.close(png_path, 'rb')
