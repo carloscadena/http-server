@@ -8,42 +8,29 @@ from os import path
 import pytest
 
 
-@pytest.fixture
-def open_and_return_html():
-    """."""
-    html_path = path.realpath(__file__).replace('test_server.py',
-                                                'webroot/a_web_page.html')
-    html_file = open(html_path).read()
-    return html_file
+html_path = path.realpath(__file__).replace('test_server.py',
+                                            'webroot/a_web_page.html')
+jpeg_path = path.realpath(__file__).replace('test_server.py',
+                                            'webroot/images/JPEG_example.jpg')
+
+png_path = path.realpath(__file__).replace('test_server.py',
+                                           'webroot/images/sample_1.png')
+balls_path = path.realpath(__file__).replace('test_server.py',
+                                             'webroot/images/Sample_Scene_Balls.jpg')
+
+with open(html_path, 'rb') as html_open:
+    html_file = html_open.read()
 
 
-@pytest.fixture
-def open_and_return_jpeg():
-    """."""
-    jpeg_path = path.realpath(__file__).replace('test_server.py',
-                                                'webroot/images/JPEG_example.jpg')
-    jpeg_open = open(jpeg_path, 'rb')
+with open(jpeg_path, 'rb') as jpeg_open:
     jpeg_file = jpeg_open.read()
-    return jpeg_file
+
+with open(balls_path, 'rb') as ball_open:
+    balls_file = ball_open.read()
 
 
-@pytest.fixture
-def open_and_return_balls():
-    """."""
-    balls_path = path.realpath(__file__).replace('test_server.py',
-                                                 'webroot/images/Sample_Scene_Balls.jpg')
-    balls_file = open(balls_path, 'rb').read()
-    return balls_file
-
-
-@pytest.fixture
-def open_and_return_png():
-    """."""
-    png_path = path.realpath(__file__).replace('test_server.py',
-                                               'webroot/images/sample_1.png')
-    png_open = open(png_path, 'rb')
+with open(png_path, 'rb') as png_open:
     png_file = png_open.read()
-    return png_file
 
 
 dir_file = '''<!DOCTYPE html><html><body><h1>File Directory:</h1>\
@@ -102,7 +89,7 @@ TEST_RESPONSE_ERROR_PARAMS = [
 TEST_CLIENT_URI_OK_PARAMS = [
     ('GET /webroot/a_web_page.html HTTP/1.1 Host: www.google.com:80',
         'HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n' +
-        'Content-Length: 132\r\n\r\n' + open_and_return_html() + '\r\n\r\n'),
+        'Content-Length: 132\r\n\r\n' + html_file.decode('utf8') + '\r\n\r\n'),
     ('GET /webroot/images/ HTTP/1.1 Host: www.facebook.com:80',
         'HTTP/1.1 200 OK\r\nContent-Type: directory\r\n' +
         'Content-Length: 151\r\n\r\n' +
@@ -110,7 +97,7 @@ TEST_CLIENT_URI_OK_PARAMS = [
     ('GET /webroot/images/JPEG_example.jpg HTTP/1.1 Host: www.outlook.com:80',
         b'HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\n' +
         b'Content-Length: 15138\r\n\r\n' +
-        open_and_return_jpeg() + b'\r\n\r\n')
+        jpeg_file + b'\r\n\r\n')
 ]
 
 TEST_CLIENT_URI_ERROR_PARAMS = [
@@ -161,27 +148,27 @@ TEST_CLIENT_PARSE_ERROR_CODE_505 = [
 
 
 TEST_RESOLVE_URI_JPG_PARAMS = [
-    ('/webroot/images/JPEG_example.jpg', open_and_return_jpeg(), 15138, 'image/jpeg'),
-    ('/webroot/images/Sample_Scene_Balls.jpg', open_and_return_balls(), 146534, 'image/jpeg')
+    ('/webroot/images/JPEG_example.jpg', jpeg_file, 15138, 'image/jpeg'),
+    ('/webroot/images/Sample_Scene_Balls.jpg', balls_file, 146534, 'image/jpeg')
 ]
 
 TEST_RESOLVE_URI_PNG = [
     ('/webroot/images/sample_1.png',
-     open_and_return_png(), 8760, 'image/png')
+     png_file, 8760, 'image/png')
 ]
 
 TEST_RESOLVE_URI_TXT = [
-    ('webroot/sample.txt',
+    ('/webroot/sample.txt',
      b'''This is a very simple text file.
-     Just to show that we can serve it up.
-     It is three lines long.''',
-     94, 'text/plain'),
+Just to show that we can serve it up.
+It is three lines long.
+''',
+     95, 'text/plain; charset=utf-8'),
 ]
 
 TEST_RESOLVE_URI_HTML = [
     ('/webroot/a_web_page.html',
-     b'''
-<!DOCTYPE html>\n<html>\n  <body>
+     b'''<!DOCTYPE html>\n<html>\n  <body>
     <h1>Code Fellows</h1>
     <p>A fine place to learn Python web programming!</p>
   </body>\n</html>''',
@@ -193,11 +180,11 @@ TEST_RESOLVE_URI_HTML = [
 TEST_RESOLVE_URI_PY = [
     ('/webroot/make_time.py',
      b'''#!/usr/bin/env python\n
-     """\nmake_time.py\n
-     simple script that returns and HTML page with the current time\n"""\n
-     import time\n\ntime_str = time.time.now().isoformat()\n
-     html = """\n<http>\n<body>\n<h2> The time is: </h2>\n<p> %s <p>\n</body>\n</http>
-     """ % time_str\n\nprint(html)\n''',
+"""\nmake_time.py\n
+simple script that returns and HTML page with the current time\n"""\n
+import datetime\n\ntime_str = datetime.datetime.now().isoformat()\n
+html = """\n<http>\n<body>\n<h2> The time is: </h2>\n<p> %s <p>\n</body>\n</http>
+""" % time_str\n\nprint(html)\n''',
      278, 'text/python')
 
 ]
@@ -206,7 +193,7 @@ TEST_RESOLVE_URI_PY = [
 TEST_RESOLVE_URI_DIR = [
     ('/webroot/',
      b'<!DOCTYPE html><html><body><h1>File Directory:</h1><ul><li>a_web_page.html</li><li>make_time.py</li><li>sample.txt</li><li>images/Sample_Scene_Balls.jpg</li><li>images/JPEG_example.jpg</li><li>images/sample_1.png</li></ul></body></html>',
-     0, 'directory')
+     236, 'directory')
 
 ]
 
@@ -307,34 +294,34 @@ def test_resolve_uri_jpg(uri, body, content_length, file_type):
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
-# @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_PNG)
-# def test_resolve_uri_png(uri, body, content_length, file_type):
-#     """."""
-#     assert resolve_uri(uri) == (body, content_length, file_type)
+@pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_PNG)
+def test_resolve_uri_png(uri, body, content_length, file_type):
+    """."""
+    assert resolve_uri(uri) == (body, content_length, file_type)
 
 
-# @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_TXT)
-# def test_resolve_uri_txt(uri, body, content_length, file_type):
-#     """."""
-#     assert resolve_uri(uri) == (body, content_length, file_type)
+@pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_TXT)
+def test_resolve_uri_txt(uri, body, content_length, file_type):
+    """."""
+    assert resolve_uri(uri) == (body, content_length, file_type)
 
 
-# @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_HTML)
-# def test_resolve_uri_html(uri, body, content_length, file_type):
-#     """."""
-#     assert resolve_uri(uri) == (body, content_length, file_type)
+@pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_HTML)
+def test_resolve_uri_html(uri, body, content_length, file_type):
+    """."""
+    assert resolve_uri(uri) == (body, content_length, file_type)
 
 
-# @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_PY)
-# def test_resolve_uri_py(uri, body, content_length, file_type):
-#     """."""
-#     assert resolve_uri(uri) == (body, content_length, file_type)
+@pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_PY)
+def test_resolve_uri_py(uri, body, content_length, file_type):
+    """."""
+    assert resolve_uri(uri) == (body, content_length, file_type)
 
 
-# @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_DIR)
-# def test_resolve_uri_dir(uri, body, content_length, file_type):
-#     """."""
-#     assert resolve_uri(uri) == (body, content_length, file_type)
+@pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_DIR)
+def test_resolve_uri_dir(uri, body, content_length, file_type):
+    """."""
+    assert resolve_uri(uri) == (body, content_length, file_type)
 
 
 @pytest.mark.parametrize('uri', TEST_RESOLVE_URI_ERROR_PARAMS)
