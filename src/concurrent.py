@@ -1,30 +1,24 @@
-"""Server for http-server step3 assignment."""
+"""Server for http-server concurrency assignment."""
 import socket  # pragma: no cover
 import sys  # pragma: no cover
 from os import walk, path
 
 
-def server():  # pragma: no cover
+def http_server(str_socket, address):  # pragma: no cover
     """
     Open the server, waits for input from client.
 
-    Closes connection on completed reply or error.
+    Closes connection on completed reply.
     Closes server with Ctrl-C
     """
-    server = socket.socket(socket.AF_INET,
-                           socket.SOCK_STREAM,
-                           socket.IPPROTO_TCP)
-    address = ('127.0.0.1', 5001)
-    server.bind(address)
-    server.listen(1)
     while True:
         try:
-            connection, address = server.accept()
+            # socket, address = server.accept()
             message = ''
             buffer_length = 8
             message_complete = False
             while not message_complete:
-                part = connection.recv(buffer_length)
+                part = str_socket.recv(buffer_length)
                 message += part.decode('utf8')
                 if message.endswith('\r\n\r\n'):
                     message_complete = True
@@ -32,16 +26,16 @@ def server():  # pragma: no cover
                 uri = parse_request(message)
                 content = resolve_uri(uri)
                 response = response_ok(content)
-                connection.sendall(response)
-                connection.close()
+                str_socket.sendall(response)
+                str_socket.close()
             except ValueError as error:
                 response = response_error(error.args[0])
-                connection.sendall(response)
-                connection.close()
+                str_socket.sendall(response)
+                str_socket.close()
             except IOError as error:
                 response = response_error(error.args[0])
-                connection.sendall(response)
-                connection.close()
+                str_socket.sendall(response)
+                str_socket.close()
         except KeyboardInterrupt:
             print('\nServer closed good bye.')
             server.shutdown(socket.SHUT_WR)
@@ -92,7 +86,7 @@ def parse_request(message):
 
 def resolve_uri(uri):
     """Take in a URI and translates it if valid or raises an error."""
-    cwd = path.realpath(__file__).replace('server.py', '')
+    cwd = path.realpath(__file__).replace('concurrent.py', '')
     file_path = path.join(cwd[:-1], uri[1:])
     file_type = file_path.split('.')[-1]
     content = ''
@@ -131,5 +125,9 @@ def resolve_uri(uri):
 
 
 if __name__ == '__main__':  # pragma: no cover
-    print('Server ready and waiting...')
-    server()
+    from gevent.server import StreamServer
+    from gevent.monkey import patch_all
+    patch_all()
+    server = StreamServer(('127.0.0.1', 10000), http_server)
+    print('Server ready and waiting on port 10000')
+    server.serve_forever()
