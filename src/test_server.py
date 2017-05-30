@@ -256,7 +256,7 @@ def test_client_resolve_uri_ok(message, result):
 
 @pytest.mark.parametrize('message', TEST_CLIENT_URI_ERROR_PARAMS)
 def test_client_resolve_uri_error(message):
-    """."""
+    """ Test resolve URI function raises IOError error for file not found."""
     with pytest.raises(IOError):
         resolve_uri(message)
 
@@ -287,31 +287,31 @@ def test_client_parse_req_bad_get(message, result):
 
 @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_JPG_PARAMS)
 def test_resolve_uri_jpg(uri, body, content_length, file_type):
-    """."""
+    """Test resolve URI returns correct jpeg file."""
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
 @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_PNG)
 def test_resolve_uri_png(uri, body, content_length, file_type):
-    """."""
+    """Test resolve URI returns corrent PNG file."""
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
 @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_TXT)
 def test_resolve_uri_txt(uri, body, content_length, file_type):
-    """."""
+    """Test resolve URI returns correct txt file."""
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
 @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_HTML)
 def test_resolve_uri_html(uri, body, content_length, file_type):
-    """."""
+    """Test resolve URI returns correct HTML file."""
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
 @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_PY)
 def test_resolve_uri_py(uri, body, content_length, file_type):
-    """."""
+    """Test resolve URI returns correct py file."""
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
@@ -323,6 +323,6 @@ def test_resolve_uri_dir(uri, body, content_length, file_type):
 
 @pytest.mark.parametrize('uri', TEST_RESOLVE_URI_ERROR_PARAMS)
 def test_resolve_uri_error(uri):
-    """."""
+    """Test resolve URI error raise IOError when URI not found."""
     with pytest.raises(IOError):
         resolve_uri(uri)
