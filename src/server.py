@@ -3,11 +3,7 @@
 # from __future__ import unicode_literals
 import socket  # pragma: no cover
 import sys  # pragma: no cover
-from email.utils import formatdate
 from os import walk, path
-
-
-date = formatdate(usegmt=True)
 
 
 def server():  # pragma: no cover
@@ -20,7 +16,7 @@ def server():  # pragma: no cover
     server = socket.socket(socket.AF_INET,
                            socket.SOCK_STREAM,
                            socket.IPPROTO_TCP)
-    address = ('127.0.0.1', 5000)
+    address = ('127.0.0.1', 5001)
     server.bind(address)
     server.listen(1)
     while True:
@@ -35,21 +31,17 @@ def server():  # pragma: no cover
                 if message.endswith('\r\n\r\n'):
                     message_complete = True
             try:
-                print(message)
                 uri = parse_request(message)
                 content = resolve_uri(uri)
                 response = response_ok(content)
-                print(response)
                 connection.sendall(response)
                 connection.close()
             except ValueError as error:
                 response = response_error(error.args[0])
-                print(response)
                 connection.sendall(response)
                 connection.close()
             except IOError as error:
                 response = response_error(error.args[0])
-                print(response)
                 connection.sendall(response)
                 connection.close()
         except KeyboardInterrupt:
@@ -62,10 +54,7 @@ def server():  # pragma: no cover
 def response_ok(body):
     """Send a response OK, headers, and content."""
     content, content_size, content_type = body
-    # content_size += 25
-    msg = b'HTTP/1.1 200 OK\r\nDate: '
-    msg += date.encode('utf8')
-    msg += b'\r\nContent-Type: '
+    msg = b'HTTP/1.1 200 OK\r\nContent-Type: '
     msg += content_type.encode('utf8')
     msg += b'\r\nContent-Length: '
     msg += str(content_size).encode('utf8')
@@ -78,7 +67,7 @@ def response_ok(body):
 def response_error(error_code):
     """Send a response erorr."""
     err = ('HTTP/1.1 ' + error_code + '\r\n\r\n').encode('utf8')
-    err += b'Sorry we could not fulfill your request.'
+    err += b'Sorry we could not fulfill your request.\r\n\r\n'
     return err
 
 
@@ -89,7 +78,8 @@ def parse_request(message):
     Verify content and return appropriate error or URI.
     """
     request_parts = message.split()
-    if len(request_parts) <= 5:
+    bob = len(request_parts)
+    if len(request_parts) <= 4:
         raise ValueError('400 Bad Request')
     if request_parts[0] == 'GET':
         if request_parts[2] == 'HTTP/1.1':
@@ -111,24 +101,23 @@ def resolve_uri(uri):
     content = ''
     content_size = 0
     content_type = ''
-    print(file_path)
     file_type_dict = {
         'txt': 'text/plain; charset=utf-8',
         'jpg': 'image/jpeg',
         'png': 'image/png',
         'py': 'text/python',
         'html': 'text/html; charset=utf-8',
-        'directory': 'directory'
     }
 
     for f_type in file_type_dict:
         if f_type == file_type:
-            content_type = f_type
+            content_type = file_type_dict[f_type]
     file_dir = []
     for dpath, dname, fname in walk(file_path):
         for file in fname:
             file_dir.append(path.join(dpath, file).replace(file_path, ''))
     if path.isdir(file_path):
+        content_type = 'directory'
         html_open = '<!DOCTYPE html><html><body><h1>File Directory:</h1><ul>'
         for file in file_dir:
             html_open += '<li>{}</li>'.format(file)
