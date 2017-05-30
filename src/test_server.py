@@ -1,7 +1,4 @@
-
-# -*- coding: utf-8 -*-
 """Test for the client server pair for echo."""
-from __future__ import unicode_literals
 from server import parse_request, resolve_uri, response_ok, response_error
 from client import client
 from os import path
