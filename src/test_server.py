@@ -329,9 +329,3 @@ def test_resolve_uri_error(uri):
     """."""
     with pytest.raises(IOError):
         resolve_uri(uri)
-
-
-# def test_close_down_files():
-#     """."""
-#     jpeg_file.close(jpeg_path, 'rb')
-#     png_file.close(png_path, 'rb')

@@ -1,6 +1,4 @@
-
-"""Server for http-server echo assignment."""
-# from __future__ import unicode_literals
+"""Server for http-server step3 assignment."""
 import socket  # pragma: no cover
 import sys  # pragma: no cover
 from os import walk, path
@@ -78,7 +76,6 @@ def parse_request(message):
     Verify content and return appropriate error or URI.
     """
     request_parts = message.split()
-    bob = len(request_parts)
     if len(request_parts) <= 4:
         raise ValueError('400 Bad Request')
     if request_parts[0] == 'GET':
