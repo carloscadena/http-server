@@ -1,4 +1,4 @@
-"""Test for the client server pair for echo."""
+"""Test for the client server pair for step3."""
 from server import parse_request, resolve_uri, response_ok, response_error
 from client import client
 from os import path
@@ -317,7 +317,7 @@ def test_resolve_uri_py(uri, body, content_length, file_type):
 
 @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_DIR)
 def test_resolve_uri_dir(uri, body, content_length, file_type):
-    """."""
+    """Test resolve URI returns correct directory and it's files."""
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
