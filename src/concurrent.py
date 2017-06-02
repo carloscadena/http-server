@@ -118,7 +118,8 @@ def resolve_uri(uri):
         return content, content_size, content_type
     elif path.isfile(file_path):
         content_size = path.getsize(file_path)
-        content = open(file_path, 'rb').read()
+        with open(file_path, 'rb') as content:
+            content = content.read()
         return content, content_size, content_type
     else:
         raise IOError('404 File Not Found')
