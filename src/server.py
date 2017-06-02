@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Server for http-server echo assignment."""
+"""Server for http-server step1 assignment."""
 from __future__ import unicode_literals
 import socket  # pragma: no cover
 import sys  # pragma: no cover
@@ -31,7 +31,8 @@ def server():  # pragma: no cover
                 if '\r\n\r\n' in message:
                     message_complete = True
             try:
-                parse_request(message)
+                print(message)
+                #parse_request(message)
                 connection.sendall(response_ok())
                 connection.close()
             except ValueError as error:
@@ -55,7 +56,7 @@ def response_error(error_code):
     """Return a response erorr."""
     return ('HTTP/1.1 ' + error_code + '\r\n\r\n').encode('utf8')
 
-
+'''
 def parse_request(message):
     """
     Accept request from client.
@@ -75,7 +76,7 @@ def parse_request(message):
             raise ValueError('505 HTTP Version Not Supported')
     else:
         raise ValueError('405 Method Not Allowed')
-
+'''
 
 if __name__ == '__main__':  # pragma: no cover
     print('Server ready and waiting...')
