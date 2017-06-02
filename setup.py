@@ -1,4 +1,4 @@
-"""Setup for http server."""
+"""Setup for http server step1."""
 from setuptools import setup
 
 dependencies = []
