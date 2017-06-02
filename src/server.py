@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Server for http-server echo assignment."""
+"""Server for http-server step2 assignment."""
 from __future__ import unicode_literals
 import socket  # pragma: no cover
 import sys  # pragma: no cover
