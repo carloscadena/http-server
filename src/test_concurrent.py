@@ -84,14 +84,14 @@ TEST_RESPONSE_ERROR_PARAMS = [
 ]
 
 TEST_CLIENT_URI_OK_PARAMS = [
-    ('GET /webroot/a_web_page.html HTTP/1.1 Host: www.google.com:80',
+    ('GET /a_web_page.html HTTP/1.1 Host: www.google.com:80',
         'HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n' +
         'Content-Length: 132\r\n\r\n' + html_file.decode('utf8') + '\r\n\r\n'),
-    ('GET /webroot/images/ HTTP/1.1 Host: www.facebook.com:80',
+    ('GET /images/ HTTP/1.1 Host: www.facebook.com:80',
         'HTTP/1.1 200 OK\r\nContent-Type: directory\r\n' +
         'Content-Length: 151\r\n\r\n' +
         dir_file + '\r\n\r\n'),
-    ('GET /webroot/images/JPEG_example.jpg HTTP/1.1 Host: www.outlook.com:80',
+    ('GET /images/JPEG_example.jpg HTTP/1.1 Host: www.outlook.com:80',
         b'HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\n' +
         b'Content-Length: 15138\r\n\r\n' +
         jpeg_file + b'\r\n\r\n')
@@ -135,9 +135,9 @@ TEST_CLIENT_PARSE_ERROR_CODE_405 = [
 
 
 TEST_CLIENT_PARSE_ERROR_CODE_505 = [
-    ('GET /webroot/ HTP/11 Host: www.google.com:80',
+    ('GET / HTP/11 Host: www.google.com:80',
      'HTTP/1.1 505 HTTP Version Not Supported\r\n\r\nSorry we could not fulfill your request.\r\n\r\n'),
-    ('GET /webroot/ HTTPS/1.1 Host: www.facebook.com:80',
+    ('GET / HTTPS/1.1 Host: www.facebook.com:80',
      'HTTP/1.1 505 HTTP Version Not Supported\r\n\r\nSorry we could not fulfill your request.\r\n\r\n'),
     ('GET bleh/bleh.html HTTP/2.1 Host: www.outlook.com:80',
      'HTTP/1.1 505 HTTP Version Not Supported\r\n\r\nSorry we could not fulfill your request.\r\n\r\n')
@@ -145,17 +145,17 @@ TEST_CLIENT_PARSE_ERROR_CODE_505 = [
 
 
 TEST_RESOLVE_URI_JPG_PARAMS = [
-    ('/webroot/images/JPEG_example.jpg', jpeg_file, 15138, 'image/jpeg'),
-    ('/webroot/images/Sample_Scene_Balls.jpg', balls_file, 146534, 'image/jpeg')
+    ('/images/JPEG_example.jpg', jpeg_file, 15138, 'image/jpeg'),
+    ('/images/Sample_Scene_Balls.jpg', balls_file, 146534, 'image/jpeg')
 ]
 
 TEST_RESOLVE_URI_PNG = [
-    ('/webroot/images/sample_1.png',
+    ('/images/sample_1.png',
      png_file, 8760, 'image/png')
 ]
 
 TEST_RESOLVE_URI_TXT = [
-    ('/webroot/sample.txt',
+    ('/sample.txt',
      b'''This is a very simple text file.
 Just to show that we can serve it up.
 It is three lines long.
@@ -164,7 +164,7 @@ It is three lines long.
 ]
 
 TEST_RESOLVE_URI_HTML = [
-    ('/webroot/a_web_page.html',
+    ('/a_web_page.html',
      b'''<!DOCTYPE html>\n<html>\n  <body>
     <h1>Code Fellows</h1>
     <p>A fine place to learn Python web programming!</p>
@@ -175,7 +175,7 @@ TEST_RESOLVE_URI_HTML = [
 
 
 TEST_RESOLVE_URI_PY = [
-    ('/webroot/make_time.py',
+    ('/make_time.py',
      b'''#!/usr/bin/env python\n
 """\nmake_time.py\n
 simple script that returns and HTML page with the current time\n"""\n
@@ -188,7 +188,7 @@ html = """\n<http>\n<body>\n<h2> The time is: </h2>\n<p> %s <p>\n</body>\n</http
 
 
 TEST_RESOLVE_URI_DIR = [
-    ('/webroot/',
+    ('/',
      b'<!DOCTYPE html><html><body><h1>File Directory:</h1><ul><li>a_web_page.html</li><li>make_time.py</li><li>sample.txt</li><li>images/Sample_Scene_Balls.jpg</li><li>images/JPEG_example.jpg</li><li>images/sample_1.png</li></ul></body></html>',
      236, 'directory')
 
@@ -196,7 +196,7 @@ TEST_RESOLVE_URI_DIR = [
 
 TEST_RESOLVE_URI_ERROR_PARAMS = [
     ('/A/BAD/DIRECTORY'),
-    ('/webroot/videos'),
+    ('/videos'),
     ('/webroot/images/xxx.jpg')
 ]
 

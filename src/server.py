@@ -92,7 +92,7 @@ def parse_request(message):
 
 def resolve_uri(uri):
     """Take in a URI and translates it if valid or raises an error."""
-    cwd = path.realpath(__file__).replace('server.py', '')
+    cwd = path.realpath(__file__).replace('server.py', 'webroot/')
     file_path = path.join(cwd, uri[1:])
     file_type = file_path.split('.')[-1]
     content = ''

@@ -3,13 +3,13 @@ from setuptools import setup
 
 dependencies = []
 extra_packages = {
-    'testing': ['ipython', 'pytest', 'pytest-cov', 'tox']
+    'testing': ['ipython', 'pytest', 'pytest-cov', 'tox', 'gevent']
 }
 
 setup(
     name='http-server',
     description='Client sends message and server sends content back.',
-    version='0.1',
+    version='0.2',
     author='Carlos Cadena, Chris Hudson',
     author_email='cs.cadena@gmail.com, c.ahudson84@yahoo.com',
     license='MIT',
