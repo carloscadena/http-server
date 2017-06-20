@@ -256,13 +256,6 @@ def test_client_resolve_uri_ok(message, result):
     assert client(message) == result
 
 
-@pytest.mark.parametrize('message', TEST_CLIENT_URI_ERROR_PARAMS)
-def test_client_resolve_uri_error(message):
-    """."""
-    with pytest.raises(IOError):
-        resolve_uri(message)
-
-
 @pytest.mark.parametrize('message, result', TEST_CLIENT_PARSE_ERROR_LEN_PARAMS)
 def test_client_parse_req_bad_len(message, result):
     """Test the length function in the parse request function."""
@@ -289,42 +282,42 @@ def test_client_parse_req_bad_get(message, result):
 
 @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_JPG_PARAMS)
 def test_resolve_uri_jpg(uri, body, content_length, file_type):
-    """."""
+    """Test resolve uri function for a jpg file."""
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
 @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_PNG)
 def test_resolve_uri_png(uri, body, content_length, file_type):
-    """."""
+    """Test resolve uri function for a png file."""
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
 @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_TXT)
 def test_resolve_uri_txt(uri, body, content_length, file_type):
-    """."""
+    """Test resolve uri function for a txt file."""
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
 @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_HTML)
 def test_resolve_uri_html(uri, body, content_length, file_type):
-    """."""
+    """Test resolve uri function for a html file."""
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
 @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_PY)
 def test_resolve_uri_py(uri, body, content_length, file_type):
-    """."""
+    """Test resolve uri function for a py file."""
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
 @pytest.mark.parametrize('uri, body', TEST_RESOLVE_URI_DIR)
 def test_resolve_uri_dir(uri, body):
-    """."""
+    """Test resolve uri function for a directory."""
     assert body in resolve_uri(uri)[0]
 
 
 @pytest.mark.parametrize('uri', TEST_RESOLVE_URI_ERROR_PARAMS)
 def test_resolve_uri_error(uri):
-    """."""
+    """Test resolve uri function for bad uri."""
     with pytest.raises(IOError):
         resolve_uri(uri)
