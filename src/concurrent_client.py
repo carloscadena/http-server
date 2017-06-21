@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-"""Client for http-server echo assignment."""
-from __future__ import unicode_literals
+"""Client for http-server concurrency assignment."""
 import socket
 import sys
 
@@ -28,12 +26,10 @@ def client(command):
             if returned.endswith(b'\r\n\r\n'):
                 message_complete = True
         returned = returned.decode('utf8')
-        # print(returned)
         client.shutdown(socket.SHUT_WR)
         client.close()
         return returned
     except UnicodeDecodeError:
-        # print(returned)
         client.shutdown(socket.SHUT_WR)
         client.close()
         return returned

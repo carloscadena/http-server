@@ -8,7 +8,7 @@ def server():  # pragma: no cover
     """
     Open the server, waits for input from client.
 
-    Closes connection on completed reply.
+    Closes connection on completed reply or error.
     Closes server with Ctrl-C
     """
     server = socket.socket(socket.AF_INET,

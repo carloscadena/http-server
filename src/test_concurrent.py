@@ -1,4 +1,4 @@
-"""Test for the client server pair for echo."""
+"""Test for the client server pair for concurrency."""
 from concurrent import parse_request, resolve_uri, response_ok, response_error
 from concurrent_client import client
 from os import path
