@@ -1,19 +1,19 @@
-"""Setup for http server."""
+"""Setup for http concurrency server."""
 from setuptools import setup
 
 dependencies = []
 extra_packages = {
-    'testing': ['ipython', 'pytest', 'pytest-cov', 'tox']
+    'testing': ['ipython', 'pytest', 'pytest-cov', 'tox', 'gevent']
 }
 
 setup(
     name='http-server',
-    description='Client sends message and server sends OK back.',
-    version='0.1',
+    description='Client sends message and server sends content back.',
+    version='0.2',
     author='Carlos Cadena, Chris Hudson',
     author_email='cs.cadena@gmail.com, c.ahudson84@yahoo.com',
     license='MIT',
-    py_modules='client, server',
+    py_modules='server_client, server, concurrent_client, concurrent',
     package_dir={'': 'src'},
     install_requires=dependencies,
     extras_require=extra_packages,

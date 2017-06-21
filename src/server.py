@@ -92,8 +92,8 @@ def parse_request(message):
 
 def resolve_uri(uri):
     """Take in a URI and translates it if valid or raises an error."""
-    cwd = path.realpath(__file__).replace('server.py', '')
-    file_path = path.join(cwd[:-1], uri[1:])
+    cwd = path.realpath(__file__).replace('server.py', 'webroot/')
+    file_path = path.join(cwd, uri[1:])
     file_type = file_path.split('.')[-1]
     content = ''
     content_size = 0
@@ -124,7 +124,8 @@ def resolve_uri(uri):
         return content, content_size, content_type
     elif path.isfile(file_path):
         content_size = path.getsize(file_path)
-        content = open(file_path, 'rb').read()
+        with open(file_path, 'rb') as content:
+            content = content.read()
         return content, content_size, content_type
     else:
         raise IOError('404 File Not Found')
