@@ -88,9 +88,7 @@ TEST_CLIENT_URI_OK_PARAMS = [
         'HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n' +
         'Content-Length: 132\r\n\r\n' + html_file.decode('utf8') + '\r\n\r\n'),
     ('GET /images/ HTTP/1.1 Host: www.facebook.com:80',
-        'HTTP/1.1 200 OK\r\nContent-Type: directory\r\n' +
-        'Content-Length: 151\r\n\r\n' +
-        dir_file + '\r\n\r\n'),
+        'sample_1.png'),
     ('GET /images/JPEG_example.jpg HTTP/1.1 Host: www.outlook.com:80',
         b'HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\n' +
         b'Content-Length: 15138\r\n\r\n' +
@@ -253,7 +251,7 @@ def test_response_ok(content, content_size, content_type, result):
 @pytest.mark.parametrize('message, result', TEST_CLIENT_URI_OK_PARAMS)
 def test_client_resolve_uri_ok(message, result):
     """Test resolve URI function returns properly formatted response."""
-    assert client(message) == result
+    assert result in client(message)
 
 
 @pytest.mark.parametrize('message, result', TEST_CLIENT_PARSE_ERROR_LEN_PARAMS)

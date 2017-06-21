@@ -14,7 +14,7 @@ def server():  # pragma: no cover
     server = socket.socket(socket.AF_INET,
                            socket.SOCK_STREAM,
                            socket.IPPROTO_TCP)
-    address = ('127.0.0.1', 5001)
+    address = ('127.0.0.1', 5002)
     server.bind(address)
     server.listen(1)
     while True:
@@ -93,6 +93,8 @@ def parse_request(message):
 def resolve_uri(uri):
     """Take in a URI and translates it if valid or raises an error."""
     cwd = path.realpath(__file__).replace('server.py', 'webroot/')
+    if cwd.endswith('c'):
+        cwd = cwd[:-1]
     file_path = path.join(cwd, uri[1:])
     file_type = file_path.split('.')[-1]
     content = ''
