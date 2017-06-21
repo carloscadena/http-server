@@ -1,4 +1,4 @@
-"""Client for http-server echo assignment."""
+"""Client for http-server step3 assignment."""
 import socket
 import sys
 
@@ -9,6 +9,7 @@ def client(command):
 
     Sends message and receives reply.
     Then closes Client.
+    Optional close with ctrl-c if client/server hang.
     """
     try:
         client = socket.socket(socket.AF_INET,

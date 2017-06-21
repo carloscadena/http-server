@@ -210,28 +210,28 @@ def test_server_parse_request_ok(message, result):
 
 
 @pytest.mark.parametrize('message', TEST_PARSE_ERROR_LEN_PARAMS)
-def test_parse_req_bad_len(message):
+def test_server_parse_req_bad_len(message):
     """Test the length function in the parse request function."""
     with pytest.raises(ValueError):
         parse_request(message)
 
 
 @pytest.mark.parametrize('message', TEST_PARSE_ERROR_CODE_400)
-def test_parse_req_bad_host(message):
+def test_server_parse_req_bad_host(message):
     """If host is bad, parse request function returns error code 400."""
     with pytest.raises(ValueError):
         parse_request(message)
 
 
 @pytest.mark.parametrize('message', TEST_PARSE_ERROR_CODE_505)
-def test_parse_req_bad_http(message):
+def test_server_parse_req_bad_http(message):
     """If http is bad, parse request function returns error code 505."""
     with pytest.raises(ValueError):
         parse_request(message)
 
 
 @pytest.mark.parametrize('message', TEST_PARSE_ERROR_CODE_405)
-def test_parse_req_bad_get(message):
+def test_server_parse_req_bad_get(message):
     """If GET is bad, parse request function returns error code 405."""
     with pytest.raises(ValueError):
         parse_request(message)
@@ -245,7 +245,7 @@ def test_response_error(code, result):
 
 @pytest.mark.parametrize('content, content_size, content_type, result', TEST_OK_PARAMS)
 def test_response_ok(content, content_size, content_type, result):
-    """Test message send and recieve."""
+    """Test for proper request and content reply."""
     body = content, content_size, content_type
     assert response_ok(body) == result
 
@@ -282,7 +282,7 @@ def test_client_parse_req_bad_get(message, result):
 
 @pytest.mark.parametrize('uri, body, content_length, file_type', TEST_RESOLVE_URI_JPG_PARAMS)
 def test_resolve_uri_jpg(uri, body, content_length, file_type):
-    """Test resolve uri function for a jpg file."""
+    """Test resolve uri function with a proper jpg file."""
     assert resolve_uri(uri) == (body, content_length, file_type)
 
 
