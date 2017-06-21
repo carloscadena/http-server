@@ -1,4 +1,4 @@
-"""Server for http-server step3 assignment."""
+"""Server for http-server concurency/step3 assignment."""
 import socket  # pragma: no cover
 import sys  # pragma: no cover
 from os import walk, path
